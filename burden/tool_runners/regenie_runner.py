@@ -43,17 +43,18 @@ class REGENIERunner(ToolRunner):
 
         # 3. Prep mask files
         self._logger.info("Prepping mask files")
-        thread_utility = ThreadUtility(self._association_pack.threads,
-                                       error_message='A REGENIE mask thread failed',
-                                       incrementor=10,
-                                       thread_factor=1)
-        for chromosome in get_chromosomes():
-            for tarball_prefix in self._association_pack.tarball_prefixes:
-                if Path(f'{tarball_prefix}.{chromosome}.variants_table.STAAR.tsv').exists():
-                    thread_utility.launch_job(class_type=self._make_regenie_files,
-                                              tarball_prefix=tarball_prefix,
-                                              chromosome=chromosome)
-        thread_utility.collect_futures()
+        #thread_utility = ThreadUtility(self._association_pack.threads,
+        #                               error_message='A REGENIE mask thread failed',
+        #                               incrementor=10,
+        #                               thread_factor=1)
+        #for chromosome in get_chromosomes():
+        #    for tarball_prefix in self._association_pack.tarball_prefixes:
+        #        if Path(f'{tarball_prefix}.{chromosome}.variants_table.STAAR.tsv').exists():
+        #            thread_utility.launch_job(class_type=self._make_regenie_files,
+        #                                      tarball_prefix=tarball_prefix,
+        #                                      chromosome=chromosome)
+        #thread_utility.collect_futures()
+        self._logger.info("Skipping file generation")
 
         # 4. Run step 2 of regenie
         self._logger.info("Running REGENIE step 2")
@@ -63,7 +64,7 @@ class REGENIERunner(ToolRunner):
                                        thread_factor=1)
         for chromosome in get_chromosomes():
             for tarball_prefix in self._association_pack.tarball_prefixes:
-                if Path(f'{tarball_prefix}.{chromosome}.REGENIE.annotationFile.tsv').exists():
+                if Path(f'{tarball_prefix}.{chromosome}.REGENIE.annotationFile.txt').exists():
                     thread_utility.launch_job(self._run_regenie_step_two,
                                               tarball_prefix=tarball_prefix,
                                               chromosome=chromosome)
@@ -226,9 +227,9 @@ class REGENIERunner(ToolRunner):
               f'--phenoFile /test/phenotypes_covariates.formatted.txt ' \
               f'--phenoCol {self._association_pack.pheno_names[0]} ' \
               f'--pred /test/fit_out_pred.list ' \
-              f'--anno-file /test/{tarball_prefix}.{chromosome}.REGENIE.annotationFile.tsv ' \
-              f'--mask-def /test/{tarball_prefix}.{chromosome}.REGENIE.maskfile.tsv ' \
-              f'--set-list /test/{tarball_prefix}.{chromosome}.REGENIE.setListFile.tsv ' \
+              f'--anno-file /test/{tarball_prefix}.{chromosome}.REGENIE.annotationFile.txt ' \
+              f'--mask-def /test/{tarball_prefix}.{chromosome}.REGENIE.maskfile.txt ' \
+              f'--set-list /test/{tarball_prefix}.{chromosome}.REGENIE.setListFile.txt ' \
               f'--aaf-bins 1 ' \
               f'--vc-tests skato-acat,acato-full ' \
               f'--bsize 400 ' \
