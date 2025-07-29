@@ -343,9 +343,7 @@ class REGENIERunner(ToolRunner):
             regenie_table = regenie_table.sort_values(by=['chrom', 'start', 'end'])
 
             # skip if mask not in columns
-            if 'MASK' not in regenie_table.columns or 'MAF' not in regenie_table.columns:
-                continue
-            else:
+            if 'MASK' in regenie_table.columns and 'MAF' in regenie_table.columns:
                 for mask in regenie_table['MASK'].value_counts().index:
 
                     for maf in regenie_table['MAF'].value_counts().index:
