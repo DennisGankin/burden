@@ -342,23 +342,27 @@ class REGENIERunner(ToolRunner):
             # Sort just in case
             regenie_table = regenie_table.sort_values(by=['chrom', 'start', 'end'])
 
-            for mask in regenie_table['MASK'].value_counts().index:
+            # skip if mask not in columns
+            if 'MASK' not in regenie_table.columns or 'MAF' not in regenie_table.columns:
+                continue
+            else:
+                for mask in regenie_table['MASK'].value_counts().index:
 
-                for maf in regenie_table['MAF'].value_counts().index:
-                    # To note on the below: I use SYMBOL for the id_column parameter below because ENST is the
-                    # index and I don't currently have a way to pass the index through to the Plotter methods...
-                    manhattan_plotter = ManhattanPlotter(self._association_pack.cmd_executor,
-                                                         regenie_table.query(f'MASK == "{mask}" & MAF == "{maf}"'),
-                                                         chrom_column='chrom', pos_column='start',
-                                                         alt_column=None,
-                                                         id_column='SYMBOL', p_column='PVALUE',
-                                                         csq_column='MASK',
-                                                         maf_column='A1FREQ', gene_symbol_column='SYMBOL',
-                                                         clumping_distance=1,
-                                                         maf_cutoff=30 / (regenie_table['N'].max() * 2),
-                                                         sig_threshold=1E-6)
+                    for maf in regenie_table['MAF'].value_counts().index:
+                        # To note on the below: I use SYMBOL for the id_column parameter below because ENST is the
+                        # index and I don't currently have a way to pass the index through to the Plotter methods...
+                        manhattan_plotter = ManhattanPlotter(self._association_pack.cmd_executor,
+                                                            regenie_table.query(f'MASK == "{mask}" & MAF == "{maf}"'),
+                                                            chrom_column='chrom', pos_column='start',
+                                                            alt_column=None,
+                                                            id_column='SYMBOL', p_column='PVALUE',
+                                                            csq_column='MASK',
+                                                            maf_column='A1FREQ', gene_symbol_column='SYMBOL',
+                                                            clumping_distance=1,
+                                                            maf_cutoff=30 / (regenie_table['N'].max() * 2),
+                                                            sig_threshold=1E-6)
 
-                    manhattan_plotter.plot()[0].rename(plot_dir / f'{mask}.{maf}.genes.REGENIE.png')
+                        manhattan_plotter.plot()[0].rename(plot_dir / f'{mask}.{maf}.genes.REGENIE.png')
 
             # Write to disk
             regenie_table.to_csv(path_or_buf=gene_out, index=False, sep="\t", na_rep='NA')
