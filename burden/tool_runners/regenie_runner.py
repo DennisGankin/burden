@@ -324,7 +324,15 @@ class REGENIERunner(ToolRunner):
         regenie_table = pd.concat(completed_gene_tables)
 
         # Now merge the transcripts table into the gene table to add annotation and then write
-        regenie_table = pd.merge(self._transcripts_table, regenie_table, left_index=True, right_index=True, how="left")
+        # try this if does not work skip:
+        try:
+            regenie_table = pd.merge(self._transcripts_table, regenie_table, left_index=True, right_index=True, how="left")
+        except:
+            self._logger.warning("Failed to merge transcripts table with REGENIE gene table. "
+                                 "This may be due to missing ENST IDs in the transcripts table.")
+            # print head of both
+            self._logger.info("REGENIE gene table head:\n" + regenie_table.head().to_string())
+            self._logger.info("Transcripts table head:\n" + self._transcripts_table.head().to_string())
 
         regenie_gene_out = Path(f'{self._output_prefix}.genes.REGENIE.stats.tsv')
         with regenie_gene_out.open('w') as gene_out:
