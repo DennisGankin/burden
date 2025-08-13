@@ -14,6 +14,7 @@ from general_utilities.plot_lib.manhattan_plotter import ManhattanPlotter
 
 
 # TODO: Implement multi-phenotype testing for REGENIE
+# WHAAAAAAAT?! not implemented yet???!!!
 class REGENIERunner(ToolRunner):
 
     def run_tool(self) -> None:
@@ -21,10 +22,22 @@ class REGENIERunner(ToolRunner):
         # 1. Run step 1 of regenie
         self._logger.info("Running REGENIE step 1")
         regenie_step1_log = self._run_regenie_step_one()
+        # log the step1 log content
+        with regenie_step1_log.open('r') as regenie_step1_reader:
+            for line in regenie_step1_reader:
+                self._logger.info(line.strip())
         # Add the step1 files to output, so we can use later if need-be:
         self._outputs.extend([Path('fit_out_pred.list'),
                               Path('fit_out_1.loco'),
                               regenie_step1_log])
+
+        # tar the whole /test directory and upload to dx
+        self._logger.info("Archiving and uploading /test directory to dx")
+        cmd = f"tar -czf /test.tar.gz /test && dx upload /test.tar.gz --brief"
+        self._association_pack.cmd_executor.run_cmd_on_docker(cmd)
+
+        if True:
+            return
 
         # 2. Prep bgen files for a run:
         self._logger.info("Downloading and filtering raw bgen files")
@@ -64,10 +77,16 @@ class REGENIERunner(ToolRunner):
                                        thread_factor=1)
         for chromosome in get_chromosomes():
             for tarball_prefix in self._association_pack.tarball_prefixes:
-                if Path(f'{tarball_prefix}.{chromosome}.REGENIE.annotationFile.txt').exists():
+                if Path(f'{tarball_prefix}.{chromosome}.REGENIE.annotationFile.txt').exists() and Path(
+                        f'{tarball_prefix}.{chromosome}.REGENIE.setListFile.txt').exists() and Path(
+                        f'{tarball_prefix}.{chromosome}.REGENIE.maskfile.txt').exists():
+                    self._make_regenie_files(tarball_prefix, chromosome)
                     thread_utility.launch_job(self._run_regenie_step_two,
                                               tarball_prefix=tarball_prefix,
                                               chromosome=chromosome)
+                else:
+                    self._logger.warning(f"Skipping REGENIE step 2 for {tarball_prefix} on chromosome {chromosome} "
+                                         f"because one or more required files are missing.")
 
         # Gather preliminary results from step 2:
         self._logger.info("Gathering REGENIE mask-based results...")
