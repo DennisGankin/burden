@@ -32,12 +32,9 @@ class REGENIERunner(ToolRunner):
                               regenie_step1_log])
 
         # tar the whole /test directory and upload to dx
-        self._logger.info("Archiving and uploading /test directory to dx")
-        cmd = f"tar -czf /test.tar.gz /test && dx upload /test.tar.gz --brief"
-        self._association_pack.cmd_executor.run_cmd_on_docker(cmd)
-
-        if True:
-            return
+        #self._logger.info("Archiving and uploading /test directory to dx")
+        #cmd = f"tar -czf /test.tar.gz /test && dx upload /test.tar.gz --brief"
+        #self._association_pack.cmd_executor.run_cmd_on_docker(cmd)
 
         # 2. Prep bgen files for a run:
         self._logger.info("Downloading and filtering raw bgen files")
@@ -80,7 +77,6 @@ class REGENIERunner(ToolRunner):
                 if Path(f'{tarball_prefix}.{chromosome}.REGENIE.annotationFile.txt').exists() and Path(
                         f'{tarball_prefix}.{chromosome}.REGENIE.setListFile.txt').exists() and Path(
                         f'{tarball_prefix}.{chromosome}.REGENIE.maskfile.txt').exists():
-                    self._make_regenie_files(tarball_prefix, chromosome)
                     thread_utility.launch_job(self._run_regenie_step_two,
                                               tarball_prefix=tarball_prefix,
                                               chromosome=chromosome)
