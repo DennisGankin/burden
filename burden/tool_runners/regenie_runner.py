@@ -18,6 +18,10 @@ from general_utilities.plot_lib.manhattan_plotter import ManhattanPlotter
 class REGENIERunner(ToolRunner):
 
     def run_tool(self) -> None:
+        # quick file check to make sure all files available
+        if not self._check_required_files():
+            self._logger.error("Required files are missing.")
+            return 
 
         # 1. Run step 1 of regenie
         self._logger.info("Running REGENIE step 1")
@@ -132,6 +136,18 @@ class REGENIERunner(ToolRunner):
         # 6. Process outputs
         self._logger.info("Processing REGENIE outputs...")
         self._outputs.extend(self._annotate_regenie_output(completed_gene_tables, completed_marker_chromosomes))
+
+    def _check_required_files():
+        for chromosome in get_chromosomes():
+            for tarball_prefix in self._association_pack.tarball_prefixes:
+                if not (Path(f'{tarball_prefix}.{chromosome}.REGENIE.annotationFile.txt').exists() and Path(
+                    f'{tarball_prefix}.{chromosome}.REGENIE.setListFile.txt').exists() and Path(
+                    f'{tarball_prefix}.{chromosome}.REGENIE.maskfile.txt').exists()):
+                        self._logger.warning(f"Missing files for {tarball_prefix}.{chromosome}")
+                        return False
+        self._logger.info(f"All required files found for {tarball_prefix}.{chromosome}")
+        return True
+                        
 
     # We need three files per chromosome-mask combination:
     # 1. Annotation file, which lists variants with gene and mask name
