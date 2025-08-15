@@ -137,7 +137,7 @@ class REGENIERunner(ToolRunner):
         self._logger.info("Processing REGENIE outputs...")
         self._outputs.extend(self._annotate_regenie_output(completed_gene_tables, completed_marker_chromosomes))
 
-    def _check_required_files():
+    def _check_required_files(self):
         for chromosome in get_chromosomes():
             for tarball_prefix in self._association_pack.tarball_prefixes:
                 if not (Path(f'{tarball_prefix}.{chromosome}.REGENIE.annotationFile.txt').exists() and Path(
@@ -148,7 +148,6 @@ class REGENIERunner(ToolRunner):
         self._logger.info(f"All required files found for {tarball_prefix}.{chromosome}")
         return True
                         
-
     # We need three files per chromosome-mask combination:
     # 1. Annotation file, which lists variants with gene and mask name
     # 2. Set list file, which lists all variants per-gene
