@@ -34,6 +34,9 @@ class REGENIERunner(ToolRunner):
         self._outputs.extend([Path('fit_out_pred.list'),
                               Path('fit_out_1.loco'),
                               regenie_step1_log])
+        self._logger.info("REGENIE step 1 completed successfully.")
+
+        return
 
         # tar the whole /test directory and upload to dx
         #self._logger.info("Archiving and uploading /test directory to dx")
