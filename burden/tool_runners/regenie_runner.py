@@ -26,7 +26,7 @@ class REGENIERunner(ToolRunner):
         # extend outputs by phenotypes_covariates.formatted.txt
         self._outputs.append(Path('phenotypes_covariates.formatted.txt'))
         # extend by SAMPLES Included
-        self._outputs.append(Path('SAMPLES.Included.txt'))
+        self._outputs.append(Path('SAMPLES_Include.txt'))
         return
 
         # 1. Run step 1 of regenie
