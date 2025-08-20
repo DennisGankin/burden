@@ -17,6 +17,12 @@ from general_utilities.plot_lib.manhattan_plotter import ManhattanPlotter
 # WHAAAAAAAT?! not implemented yet???!!!
 class REGENIERunner(ToolRunner):
 
+    # extend outputs by phenotypes_covariates.formatted.txt
+    self._outputs.append(Path('phenotypes_covariates.formatted.txt'))
+    # extend by SAMPLES Included
+    self._outputs.append(Path('SAMPLES.Included.txt'))
+    return
+
     def run_tool(self) -> None:
         # quick file check to make sure all files available
         if not self._check_required_files():
