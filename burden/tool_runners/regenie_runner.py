@@ -24,12 +24,14 @@ class REGENIERunner(ToolRunner):
             return 
 
         # extend outputs by phenotypes_covariates.formatted.txt
-        self._outputs.append(Path('phenotypes_covariates.formatted.txt'))
+        #self._outputs.append(Path('phenotypes_covariates.formatted.txt'))
         # extend by SAMPLES Included
-        self._outputs.append(Path('SAMPLES_Include.txt'))
-        return
+        #self._outputs.append(Path('SAMPLES_Include.txt'))
+        #return
 
+        # skip step one 
         # 1. Run step 1 of regenie
+        """
         self._logger.info("Running REGENIE step 1")
         regenie_step1_log = self._run_regenie_step_one()
         # log the step1 log content
@@ -43,7 +45,7 @@ class REGENIERunner(ToolRunner):
         self._logger.info("REGENIE step 1 completed successfully.")
 
         return
-
+        """
         # tar the whole /test directory and upload to dx
         #self._logger.info("Archiving and uploading /test directory to dx")
         #cmd = f"tar -czf /test.tar.gz /test && dx upload /test.tar.gz --brief"
@@ -275,6 +277,8 @@ class REGENIERunner(ToolRunner):
               f'--threads 1 ' \
               f'--minMAC 1 ' \
               f'--maxCatLevels 110 ' \
+              f'--verbose ' \
+              f'--bt ' \
               f'--out /test/{tarball_prefix}.{chromosome} '
 
         cmd += define_covariate_string(self._association_pack.found_quantitative_covariates,
