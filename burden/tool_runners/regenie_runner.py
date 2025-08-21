@@ -294,7 +294,10 @@ class REGENIERunner(ToolRunner):
             self._logger.error(f"Error occurred while running REGENIE step 2: {e}")
 
         # log the output
-        self._logger.info(f"REGENIE step 2. Log file: {regenie_log}")
+        # open the file
+        with open(regenie_log, 'r') as f:
+            log_contents = f.read()
+        self._logger.info(f"REGENIE step 2. Log file: {log_contents}")
 
         return tarball_prefix, chromosome, regenie_log
 
