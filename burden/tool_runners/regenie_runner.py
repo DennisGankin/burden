@@ -288,7 +288,13 @@ class REGENIERunner(ToolRunner):
                                        ignore_base=self._association_pack.ignore_base_covariates)
 
         regenie_log = Path(f'{tarball_prefix}.{chromosome}.REGENIE_genes.log')
-        self._association_pack.cmd_executor.run_cmd_on_docker(cmd, stdout_file=regenie_log)
+        try:
+            self._association_pack.cmd_executor.run_cmd_on_docker(cmd, stdout_file=regenie_log)
+        except Exception as e:
+            self._logger.error(f"Error occurred while running REGENIE step 2: {e}")
+
+        # log the output
+        self._logger.info(f"REGENIE step 2. Log file: {regenie_log}")
 
         return tarball_prefix, chromosome, regenie_log
 
