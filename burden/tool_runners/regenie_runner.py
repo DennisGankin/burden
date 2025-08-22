@@ -31,7 +31,7 @@ class REGENIERunner(ToolRunner):
 
         # skip step one 
         # 1. Run step 1 of regenie
-        """
+        
         self._logger.info("Running REGENIE step 1")
         regenie_step1_log = self._run_regenie_step_one()
         # log the step1 log content
@@ -45,7 +45,7 @@ class REGENIERunner(ToolRunner):
         self._logger.info("REGENIE step 1 completed successfully.")
 
         return
-        """
+        
         # tar the whole /test directory and upload to dx
         #self._logger.info("Archiving and uploading /test directory to dx")
         #cmd = f"tar -czf /test.tar.gz /test && dx upload /test.tar.gz --brief"
@@ -278,7 +278,6 @@ class REGENIERunner(ToolRunner):
               f'--minMAC 1 ' \
               f'--maxCatLevels 110 ' \
               f'--verbose ' \
-              f'--bt ' \
               f'--out /test/{tarball_prefix}.{chromosome} '
 
         cmd += define_covariate_string(self._association_pack.found_quantitative_covariates,
