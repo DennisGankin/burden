@@ -24,9 +24,9 @@ class REGENIERunner(ToolRunner):
             return 
 
         # extend outputs by phenotypes_covariates.formatted.txt
-        #self._outputs.append(Path('phenotypes_covariates.formatted.txt'))
+        self._outputs.append(Path('phenotypes_covariates.formatted.txt'))
         # extend by SAMPLES Included
-        #self._outputs.append(Path('SAMPLES_Include.txt'))
+        self._outputs.append(Path('SAMPLES_Include.txt'))
         #return
 
         # skip step one 
@@ -243,8 +243,14 @@ class REGENIERunner(ToolRunner):
               '--maxCatLevels 110 ' \
               '--bsize 1000 ' \
               '--out /test/fit_out ' \
-              f'--threads {str(self._association_pack.threads)} ' \
-              f'--phenoCol {self._association_pack.pheno_names[0]} '
+              f'--threads {str(self._association_pack.threads)} '
+
+        if len(self._association_pack.pheno_names) != 1:
+            pheno_names = ','.join(self._association_pack.pheno_names)
+            self._logger.info("Multiple phenotypes: " + pheno_names)
+            cmd += f'--phenoColList {pheno_names} '
+        else:
+            cmd += f'--phenoCol {self._association_pack.pheno_names[0]} '
 
         cmd += define_covariate_string(self._association_pack.found_quantitative_covariates,
                                        self._association_pack.found_categorical_covariates,

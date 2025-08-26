@@ -17,7 +17,9 @@ class BurdenIngestData(IngestData):
 
         # Put additional options/covariate processing required by this specific package here
         if len(self.get_association_pack().pheno_names) > 1:
-            raise dxpy.AppError('The burden module currently only allows for running one phenotype at a time!')
+            print("Woaaah easy big boi. We doin' multiple phenotypes now? If not planned better shamsh that cancel button.")
+            print("Pheno names", self.get_association_pack().pheno_names)
+            #raise dxpy.AppError('The burden module currently only allows for running one phenotype at a time!')
 
         is_snp_tar, is_gene_tar, tarball_prefixes = ingest_tarballs(parsed_options.association_tarballs)
         if is_snp_tar or is_gene_tar:
