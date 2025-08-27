@@ -34,6 +34,8 @@ class REGENIERunner(ToolRunner):
         
         self._logger.info("Running REGENIE step 1")
         regenie_step1_log = self._run_regenie_step_one()
+        return
+
         # log the step1 log content
         with regenie_step1_log.open('r') as regenie_step1_reader:
             for line in regenie_step1_reader:
