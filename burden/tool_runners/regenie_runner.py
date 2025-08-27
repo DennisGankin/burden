@@ -39,9 +39,13 @@ class REGENIERunner(ToolRunner):
             for line in regenie_step1_reader:
                 self._logger.info(line.strip())
         # Add the step1 files to output, so we can use later if need-be:
-        self._outputs.extend([Path('fit_out_pred.list'),
-                              Path('fit_out_1.loco'),
-                              regenie_step1_log])
+        self._outputs.append(Path('fit_out_pred.list'))
+        
+        # Find all fit_out_*.loco files
+        loco_files = list(Path('.').glob('fit_out_*.loco'))
+        self._outputs.extend(loco_files)
+        
+        self._outputs.append(regenie_step1_log)
         self._logger.info("REGENIE step 1 completed successfully.")
 
         return
