@@ -240,7 +240,7 @@ class REGENIERunner(ToolRunner):
                     self._logger.info(f'Number of SNPs for REGENIE Step 1: {found_snp_count.group(1)}')
             plink_out.close()
 
-        self._outputs.extend(Path('REGENIE_extract.snplist'))
+        self._outputs.append(Path('REGENIE_extract.snplist'))
         return None
 
         cmd = 'regenie ' \
