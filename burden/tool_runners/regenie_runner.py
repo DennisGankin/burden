@@ -27,7 +27,7 @@ class REGENIERunner(ToolRunner):
         self._outputs.append(Path('phenotypes_covariates.formatted.txt'))
         # extend by SAMPLES Included
         self._outputs.append(Path('SAMPLES_Include.txt'))
-        return
+        #return
 
         # skip step one 
         # 1. Run step 1 of regenie
@@ -237,6 +237,9 @@ class REGENIERunner(ToolRunner):
                 if found_snp_count is not None:
                     self._logger.info(f'Number of SNPs for REGENIE Step 1: {found_snp_count.group(1)}')
             plink_out.close()
+
+        self._outputs.extend(Path('REGENIE_extract.snplist'))
+        return None
 
         cmd = 'regenie ' \
               '--step 1 ' \
